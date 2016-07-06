@@ -6,7 +6,7 @@ defmodule UAParser2.Parsers.Supervisor do
   end
 
   def init(_default) do
-    filename = File.cwd! |> Path.join("priv/regexes.yaml")
+    filename = Path.join(:code.priv_dir(:ua_parser2), "regexes.yaml")
 
     children = [
       worker(UAParser2.Parsers.Cache, [filename]),

@@ -28,6 +28,8 @@ defmodule UAParser2.Parsers.Compiler do
   %{ regex: ~r/Chrome/, group: [%{regex: ~r/Chrome Mobile/}] }
   """
 
+  @atoms [:family, :v1, :v2, :v3, :v4, :device, :brand, :model, :type]
+
   @doc """
   Compiles parsers
   """
@@ -36,6 +38,7 @@ defmodule UAParser2.Parsers.Compiler do
                 "engine_parsers"     => engine_collection,
                 "os_parsers"         => os_collection,
                 "device_parsers"     => device_collection}) do
+    _ = @atoms
     %{
       ua:     compile_collection(ua_collection),
       engine: compile_collection(engine_collection),
@@ -90,7 +93,7 @@ defmodule UAParser2.Parsers.Compiler do
   defp append_props(parser, source) do
     source
       |> Map.take(["family", "v1", "v2", "v3", "v4", "device", "brand", "model", "type"])
-      |> Enum.reduce(parser, fn ({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
+      |> Enum.reduce(parser, fn ({key, val}, acc) -> Map.put(acc, String.to_existing_atom(key), val) end)
   end
 
   # \uXXXX => \x{XXXX}
